@@ -1,0 +1,13 @@
+web: java -jar target/telegram-bot-1.0-SNAPSHOT-jar-with-dependencies.jar
+# Build bosqichi
+FROM eclipse-temurin:17-jdk AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Run bosqichi
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/*-with-dependencies.jar app.jar
+
+CMD ["java", "-jar", "app.jar"]
